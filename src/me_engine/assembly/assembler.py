@@ -16,9 +16,8 @@ from typing import Mapping
 
 from ..domain.drivers import DriverSet, GeographyDrivers
 from ..domain.series import Series
-from ..domain.taxonomy import (
-    Band, Dimension, GEOGRAPHIES, PRICED_DIMENSION, SEGMENTATION_DIMENSIONS,
-)
+from ..domain.runtime_taxonomy import RuntimeTaxonomy, default_taxonomy
+from ..domain.taxonomy import Band, Dimension
 from .model import BandResult, GeographyResult, MarketResult, MetricRow
 
 VOLUME_UNIT_SCALE = 1000.0     # US$ Mn / (US$ per unit) -> Th Liters
@@ -26,6 +25,9 @@ VOLUME_UNIT_SCALE = 1000.0     # US$ Mn / (US$ per unit) -> Th Liters
 
 class Assembler:
     """Turns drivers into a fully-resolved `MarketResult`."""
+
+    def __init__(self, taxonomy: RuntimeTaxonomy | None = None) -> None:
+        self._taxonomy = taxonomy or default_taxonomy()
 
     def assemble(self, drivers: DriverSet) -> MarketResult:
         results = {
@@ -47,22 +49,53 @@ class Assembler:
         return BandResult(band=Band.VALUE, total=geo.value, rows_by_label=rows)
 
     def _asp_band(self, geo: GeographyDrivers) -> BandResult:
-        """ASP only spans the product dimension; the band 'total' is the
-        value-weighted average price, recovered as value-total / volume-total.
-        Here we expose the per-product ASP rows; the aggregate is derived in the
-        volume step and carried as the ASP band total for rendering parity."""
-        rows = {
-            product: MetricRow(product, geo.asp.for_product(product), share_of_parent=None)
-            for product in PRICED_DIMENSION.segments
+        """ASP only spans the leaf products of the priced dimension.
+
+        Parent/rollup segments are excluded — they have no meaningful ASP row
+        in the workbook (their cell is either 0 or a sum). Only leaf products
+        participate in ASP and Volume calculations.
+        """
+        priced = self._taxonomy.priced_dimension
+        parents_in_priced = {
+            priced.parent_of(s) for s in priced.segments if priced.parent_of(s) is not None
         }
-        # Band total ASP is filled once the volume band computes the blended price.
-        placeholder_total = geo.asp.for_product(PRICED_DIMENSION.segments[0])
+        leaf_products = [p for p in priced.segments if p not in parents_in_priced]
+
+        rows = {}
+        for product in leaf_products:
+            try:
+                series = geo.asp.for_product(product)
+            except KeyError:
+                continue
+            rows[product] = MetricRow(product, series, share_of_parent=None)
+
+        if not rows:
+            # Fallback: use whatever the driver has
+            for product in priced.segments:
+                try:
+                    rows[product] = MetricRow(product, geo.asp.for_product(product),
+                                              share_of_parent=None)
+                except KeyError:
+                    pass
+
+        placeholder_total = next(iter(rows.values())).series if rows else geo.value
         return BandResult(band=Band.ASP, total=placeholder_total, rows_by_label=rows)
 
     def _volume_band(
         self, value_band: BandResult, asp_band: BandResult, geo: GeographyDrivers,
     ) -> BandResult:
-        """Volume per product = value / asp * 1000; band total = sum of products."""
+        """Volume per product = value / asp * 1000; band total = sum of products.
+
+        Only products that appear in BOTH the value band and ASP band are included.
+        """
+        common_products = [
+            p for p in asp_band.rows_by_label
+            if p in value_band.rows_by_label
+        ]
+        if not common_products:
+            # Degenerate case — return empty volume band
+            return BandResult(band=Band.VOLUME, total=geo.value, rows_by_label={})
+
         product_rows = {
             product: MetricRow(
                 product,
@@ -70,7 +103,7 @@ class Assembler:
                     asp_band.rows_by_label[product].series, VOLUME_UNIT_SCALE),
                 share_of_parent=None,
             )
-            for product in PRICED_DIMENSION.segments
+            for product in common_products
         }
         total_volume = self._sum_series(r.series for r in product_rows.values())
         rows = self._attach_shares(product_rows, total_volume)
@@ -87,7 +120,7 @@ class Assembler:
         source workbook renders the Market Share columns.
         """
         rows: dict[str, MetricRow] = {}
-        for dim in SEGMENTATION_DIMENSIONS:
+        for dim in self._taxonomy.segmentation_dimensions:
             shares = geo.segmentation.for_dimension(dim)
             for segment in dim.segments:
                 parent_label = dim.parent_of(segment)

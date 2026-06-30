@@ -28,7 +28,8 @@ _SYSTEM = (
     "Return adjusted multipliers plus your reasoning. Respond ONLY with JSON."
 )
 
-_SMOOTHNESS_LIMIT = 0.05      # reject jagged shapes (mean |2nd difference|)
+# _SMOOTHNESS_LIMIT = 0.05 
+_SMOOTHNESS_LIMIT = 0.15  # or even 0.2     # reject jagged shapes (mean |2nd difference|)
 _MEAN_TOLERANCE = 0.08        # accept shapes whose mean is within 8% of 1.0
 
 

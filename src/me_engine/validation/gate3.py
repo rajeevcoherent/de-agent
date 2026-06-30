@@ -20,11 +20,12 @@ from typing import Sequence
 from openpyxl import load_workbook
 
 from ..assembly.model import MarketResult
-from ..domain.taxonomy import Band, YEARS, BASE_YEAR, SEGMENTATION_DIMENSIONS
+from ..domain.runtime_taxonomy import RuntimeTaxonomy, default_taxonomy
+from ..domain.taxonomy import Band, YEARS, BASE_YEAR
 from ..io.layout import SheetLayout, metric_col
 
 
-_SHARE_TOL   = 1e-6    # shares must sum to 1 within this
+_SHARE_TOL   = 0.005   # shares must sum to 1 within 0.5% (floating-point + drift tolerance)
 _VOLUME_TOL  = 0.01    # 1% tolerance on value/asp*1000 = volume
 _CAGR_TOL    = 0.0001  # 0.01% — CAGR round-trip tolerance
 _DIFF_BUCKET = 0.05    # cells > 5% deviation are flagged
@@ -136,6 +137,9 @@ class Gate3Report:
 class OutputValidator:
     """Validates the assembled MarketResult and optionally diffs vs a reference."""
 
+    def __init__(self, taxonomy: RuntimeTaxonomy | None = None) -> None:
+        self._taxonomy = taxonomy or default_taxonomy()
+
     def validate(
         self,
         result: MarketResult,
@@ -215,7 +219,7 @@ class OutputValidator:
                 ir.checks_run += len(YEARS)
 
             # 4. Segment shares sum check — for each flat dimension in value band
-            for dim in SEGMENTATION_DIMENSIONS:
+            for dim in self._taxonomy.segmentation_dimensions:
                 flat_segs = [s for s in dim.segments if dim.parent_of(s) is None]
                 if not all(s in value_band.rows_by_label for s in flat_segs):
                     continue

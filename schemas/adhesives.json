@@ -1,0 +1,241 @@
+{
+  "market_name": "Adhesive & Bonding Market",
+  "dimensions": [
+    {
+      "title": "By Resin / Chemistry Type",
+      "segments": [
+        "Acrylic Adhesives",
+        "Epoxy Adhesives",
+        "Polyurethane Adhesives",
+        "Silicone Adhesives",
+        "Cyanoacrylate Adhesives",
+        "Ethylene Vinyl Acetate Adhesives",
+        "Others (Polyvinyl Acetate, Rubber-based, Phenolic, etc.)"
+      ]
+    },
+    {
+      "title": "By Formulation",
+      "segments": [
+        "Water Based Adhesives",
+        "Solvent Based Adhesives",
+        "Hot Melt Adhesives",
+        "Reactive Adhesives",
+        "UV Cured / Light Cured Adhesives",
+        "Pressure Sensitive Adhesives",
+        "Adhesive Films and Tapes"
+      ]
+    },
+    {
+      "title": "By Bonding Type",
+      "segments": [
+        "Structural Bonding",
+        "Non-Structural Bonding",
+        "Flexible / Elastic Bonding",
+        "Surface Lamination Bonding",
+        "Assembly Bonding",
+        "Temporary / Removable Bonding",
+        "Hybrid Bonding"
+      ]
+    },
+    {
+      "title": "By Substrate",
+      "segments": [
+        "Metal",
+        "Plastic",
+        "Composite",
+        "Glass",
+        "Paper & Paperboard",
+        "Wood",
+        "Others (Rubber, Textile, etc.)"
+      ]
+    },
+    {
+      "title": "By End Use",
+      "segments": [
+        "Automotive",
+        "Consumer Electronics",
+        "Aerospace",
+        "Packaging",
+        "Building & Construction",
+        "Medical Devices",
+        "Consumer Goods",
+        "Others (Furniture, Footwear, etc.)"
+      ]
+    },
+    {
+      "title": "By Distribution Channel",
+      "segments": [
+        "Direct OEM Supplies",
+        "Indirect (via Distributors)"
+      ]
+    }
+  ],
+  "geographies": [
+    "U.S.",
+    "Canada",
+    "Germany",
+    "U.K.",
+    "France",
+    "Italy",
+    "Spain",
+    "Russia",
+    "Rest of Europe",
+    "China",
+    "India",
+    "Japan",
+    "South Korea",
+    "ASEAN",
+    "Australia",
+    "Rest of Asia Pacific",
+    "Brazil",
+    "Mexico",
+    "Argentina",
+    "Rest of Latin America",
+    "Israel",
+    "GCC",
+    "Rest of Middle East",
+    "North Africa",
+    "Central Africa",
+    "South Africa"
+  ],
+  "priced_dimension": "By Resin / Chemistry Type",
+  "geography_tree": {
+    "name": "Global",
+    "children": [
+      {
+        "name": "Middle East",
+        "children": [
+          {
+            "name": "Israel",
+            "children": []
+          },
+          {
+            "name": "GCC",
+            "children": []
+          },
+          {
+            "name": "Rest of Middle East",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Africa",
+        "children": [
+          {
+            "name": "North Africa",
+            "children": []
+          },
+          {
+            "name": "Central Africa",
+            "children": []
+          },
+          {
+            "name": "South Africa",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Latin America",
+        "children": [
+          {
+            "name": "Brazil",
+            "children": []
+          },
+          {
+            "name": "Mexico",
+            "children": []
+          },
+          {
+            "name": "Argentina",
+            "children": []
+          },
+          {
+            "name": "Rest of Latin America",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "North America",
+        "children": [
+          {
+            "name": "U.S.",
+            "children": []
+          },
+          {
+            "name": "Canada",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Asia Pacific",
+        "children": [
+          {
+            "name": "China",
+            "children": []
+          },
+          {
+            "name": "India",
+            "children": []
+          },
+          {
+            "name": "Japan",
+            "children": []
+          },
+          {
+            "name": "South Korea",
+            "children": []
+          },
+          {
+            "name": "ASEAN",
+            "children": []
+          },
+          {
+            "name": "Australia",
+            "children": []
+          },
+          {
+            "name": "Rest of Asia Pacific",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Europe",
+        "children": [
+          {
+            "name": "Germany",
+            "children": []
+          },
+          {
+            "name": "U.K.",
+            "children": []
+          },
+          {
+            "name": "France",
+            "children": []
+          },
+          {
+            "name": "Italy",
+            "children": []
+          },
+          {
+            "name": "Spain",
+            "children": []
+          },
+          {
+            "name": "Russia",
+            "children": []
+          },
+          {
+            "name": "Rest of Europe",
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

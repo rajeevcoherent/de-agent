@@ -13,7 +13,7 @@ from typing import Mapping
 from .config import AgentConfig
 from .llm import LLMClient, LLMError
 from ..domain.series import Series
-from ..domain.taxonomy import BASE_YEAR, PRICED_DIMENSION, YEARS
+from ..domain.taxonomy import BASE_YEAR, Dimension, YEARS
 
 # Data-derived default (mean ASP CAGR across the avocado ME file).
 DEFAULT_ASP_INFLATION = 0.0085
@@ -41,14 +41,19 @@ class AspAgent:
         self._config = config or AgentConfig.load()
         self._llm = llm or LLMClient(self._config)
 
-    def decide(self, market_name: str) -> AspDecision:
+    def decide(self, market_name: str,
+               priced_dimension: Dimension | None = None) -> AspDecision:
+        dim = priced_dimension
+        if dim is None:
+            from ..domain.taxonomy import PRICED_DIMENSION
+            dim = PRICED_DIMENSION
         if not self._config.is_online:
-            return self._fallback("offline")
+            return self._fallback("offline", dim)
         try:
-            raw = self._llm.complete_json(_SYSTEM, self._prompt(market_name))
-            return self._validate(raw)
+            raw = self._llm.complete_json(_SYSTEM, self._prompt(market_name, dim))
+            return self._validate(raw, dim)
         except (LLMError, KeyError, ValueError, TypeError):
-            return self._fallback("agent error")
+            return self._fallback("agent error", dim)
 
     def price_path(self, base_price: float, rate: float) -> Series:
         return Series({
@@ -56,20 +61,20 @@ class AspAgent:
             for year in YEARS
         })
 
-    def _prompt(self, market_name: str) -> str:
-        products = "\n".join(f"  - {p}" for p in PRICED_DIMENSION.segments)
+    def _prompt(self, market_name: str, dim: Dimension) -> str:
+        products = "\n".join(f"  - {p}" for p in dim.segments)
         return (
             f"Market: {market_name}\nProducts:\n{products}\n\n"
             f'Return JSON: {{"rates": [{{"product": <name>, "rate": <float>}}], '
             f'"rationale": <short>}} covering every product.'
         )
 
-    def _validate(self, raw: dict) -> AspDecision:
+    def _validate(self, raw: dict, dim: Dimension) -> AspDecision:
         provided = {r["product"]: r for r in raw.get("rates", [])
                     if isinstance(r, dict) and "product" in r}
         rates = {
             product: self._clamp(provided.get(product, {}).get("rate"))
-            for product in PRICED_DIMENSION.segments
+            for product in dim.segments
         }
         return AspDecision(rates, str(raw.get("rationale", "")), used_fallback=False)
 
@@ -82,7 +87,7 @@ class AspAgent:
         return max(0.0, min(_MAX_ASP_INFLATION, rate))
 
     @staticmethod
-    def _fallback(reason: str) -> AspDecision:
-        rates = {p: DEFAULT_ASP_INFLATION for p in PRICED_DIMENSION.segments}
+    def _fallback(reason: str, dim: Dimension) -> AspDecision:
+        rates = {p: DEFAULT_ASP_INFLATION for p in dim.segments}
         return AspDecision(rates, f"data-derived default ({reason})",
                            used_fallback=True)

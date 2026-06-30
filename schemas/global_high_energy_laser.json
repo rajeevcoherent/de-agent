@@ -1,0 +1,423 @@
+{
+  "market_name": "Global High Energy Laser Market",
+  "dimensions": [
+    {
+      "title": "By Laser Type",
+      "segments": [
+        "Solid-State Lasers",
+        "Nd:YAG",
+        "Yb:YAG",
+        "Tm:YAG",
+        "Er:YAG",
+        "Others (Ce:YAG, Ho:YAG, etc.)",
+        "Fiber Lasers",
+        "Continuous Wave Fiber Lasers",
+        "Pulsed Fiber Lasers",
+        "Raman Fiber Lasers",
+        "SBC Fiber Arrays",
+        "Gas Lasers",
+        "Chemical High-Energy Lasers",
+        "Excimer Lasers",
+        "Industrial Gas Lasers (CO₂ etc.)",
+        "Semiconductor Lasers",
+        "Other Laser Types"
+      ],
+      "parent": {
+        "Solid-State Lasers": null,
+        "Nd:YAG": "Solid-State Lasers",
+        "Yb:YAG": "Solid-State Lasers",
+        "Tm:YAG": "Solid-State Lasers",
+        "Er:YAG": "Solid-State Lasers",
+        "Others (Ce:YAG, Ho:YAG, etc.)": "Solid-State Lasers",
+        "Fiber Lasers": null,
+        "Continuous Wave Fiber Lasers": "Fiber Lasers",
+        "Pulsed Fiber Lasers": "Fiber Lasers",
+        "Raman Fiber Lasers": "Fiber Lasers",
+        "SBC Fiber Arrays": "Fiber Lasers",
+        "Gas Lasers": null,
+        "Chemical High-Energy Lasers": "Gas Lasers",
+        "Excimer Lasers": "Gas Lasers",
+        "Industrial Gas Lasers (CO₂ etc.)": "Gas Lasers",
+        "Semiconductor Lasers": null,
+        "Other Laser Types": null
+      }
+    },
+    {
+      "title": "By Beam Architecture",
+      "segments": [
+        "Rod Geometry",
+        "Disk / Thin-Disk",
+        "Slab",
+        "Single-Mode",
+        "Multi-Mode",
+        "Beam Combined Arrays"
+      ],
+      "parent": {
+        "Rod Geometry": null,
+        "Disk / Thin-Disk": null,
+        "Slab": null,
+        "Single-Mode": null,
+        "Multi-Mode": null,
+        "Beam Combined Arrays": null
+      }
+    },
+    {
+      "title": "By Power Output",
+      "segments": [
+        "Below 1 kW",
+        "1 kW to 20 kW",
+        "21 kW to 100 kW",
+        "Above 100 kW"
+      ],
+      "parent": {
+        "Below 1 kW": null,
+        "1 kW to 20 kW": null,
+        "21 kW to 100 kW": null,
+        "Above 100 kW": null
+      }
+    },
+    {
+      "title": "By Mode of Operation",
+      "segments": [
+        "Continuous Wave (CW)",
+        "Pulsed",
+        "Ultrashort Pulse"
+      ],
+      "parent": {
+        "Continuous Wave (CW)": null,
+        "Pulsed": null,
+        "Ultrashort Pulse": null
+      }
+    },
+    {
+      "title": "By Mobility / Deployment Model",
+      "segments": [
+        "Fixed / Stationary",
+        "Mobile"
+      ],
+      "parent": {
+        "Fixed / Stationary": null,
+        "Mobile": null
+      }
+    },
+    {
+      "title": "By Component",
+      "segments": [
+        "Raw & Active Materials",
+        "YAG Crystals (Pure, Nd, Yb, Tm, Er)",
+        "Specialty Laser Glasses",
+        "Fiber Gain Media",
+        "Other Laser Crystals",
+        "Optical Materials & Components",
+        "Sapphire Crystals",
+        "Infrared Windows & Optical Substrates",
+        "Large-Aperture Optics",
+        "Pump Sources",
+        "Laser Diodes & Diode Arrays",
+        "Pump Modules",
+        "Beam Control & Delivery Subsystems",
+        "Thermal Management Subsystems",
+        "Others (Power & Electronics Subsystems, etc.)"
+      ],
+      "parent": {
+        "Raw & Active Materials": null,
+        "YAG Crystals (Pure, Nd, Yb, Tm, Er)": "Raw & Active Materials",
+        "Specialty Laser Glasses": "Raw & Active Materials",
+        "Fiber Gain Media": "Raw & Active Materials",
+        "Other Laser Crystals": "Raw & Active Materials",
+        "Optical Materials & Components": null,
+        "Sapphire Crystals": "Optical Materials & Components",
+        "Infrared Windows & Optical Substrates": "Optical Materials & Components",
+        "Large-Aperture Optics": "Optical Materials & Components",
+        "Pump Sources": null,
+        "Laser Diodes & Diode Arrays": "Pump Sources",
+        "Pump Modules": "Pump Sources",
+        "Beam Control & Delivery Subsystems": null,
+        "Thermal Management Subsystems": null,
+        "Others (Power & Electronics Subsystems, etc.)": null
+      }
+    },
+    {
+      "title": "By Application",
+      "segments": [
+        "Defense & Security",
+        "Counter-UAS",
+        "Counter-RAM",
+        "Laser Guidance Systems",
+        "Defensive Countermeasures & DIRCM",
+        "Other Defense & Security Applications",
+        "Industrial Manufacturing",
+        "Cutting",
+        "Welding",
+        "Drilling",
+        "Surface Treatment & Hardening",
+        "Laser Cladding / DED",
+        "Marking & Engraving",
+        "Microprocessing & Precision Machining",
+        "Quality Control & Inspection",
+        "Medical",
+        "Surgical Lasers",
+        "Dental Surgery Lasers",
+        "Aesthetic Treatment Lasers",
+        "Diagnostic Imaging",
+        "Sensing & Navigation",
+        "LiDAR & 3D Scanning",
+        "Doppler Vibrometry",
+        "Ring Laser Gyroscopes",
+        "Laser Altimeters",
+        "Other Sensing & Navigations",
+        "Scientific & Research",
+        "Others (Telecom, FSO, etc.)"
+      ],
+      "parent": {
+        "Defense & Security": null,
+        "Counter-UAS": "Defense & Security",
+        "Counter-RAM": "Defense & Security",
+        "Laser Guidance Systems": "Defense & Security",
+        "Defensive Countermeasures & DIRCM": "Defense & Security",
+        "Other Defense & Security Applications": "Defense & Security",
+        "Industrial Manufacturing": null,
+        "Cutting": "Industrial Manufacturing",
+        "Welding": "Industrial Manufacturing",
+        "Drilling": "Industrial Manufacturing",
+        "Surface Treatment & Hardening": "Industrial Manufacturing",
+        "Laser Cladding / DED": "Industrial Manufacturing",
+        "Marking & Engraving": "Industrial Manufacturing",
+        "Microprocessing & Precision Machining": "Industrial Manufacturing",
+        "Quality Control & Inspection": "Industrial Manufacturing",
+        "Medical": null,
+        "Surgical Lasers": "Medical",
+        "Dental Surgery Lasers": "Medical",
+        "Aesthetic Treatment Lasers": "Medical",
+        "Diagnostic Imaging": "Medical",
+        "Sensing & Navigation": null,
+        "LiDAR & 3D Scanning": "Sensing & Navigation",
+        "Doppler Vibrometry": "Sensing & Navigation",
+        "Ring Laser Gyroscopes": "Sensing & Navigation",
+        "Laser Altimeters": "Sensing & Navigation",
+        "Other Sensing & Navigations": "Sensing & Navigation",
+        "Scientific & Research": null,
+        "Others (Telecom, FSO, etc.)": null
+      }
+    },
+    {
+      "title": "By End User",
+      "segments": [
+        "Defense & Government",
+        "Armed Forces",
+        "Homeland Security & Border Defense",
+        "Defense Labs & R&D",
+        "Defense Contractors & Integrators",
+        "Industrial Manufacturing",
+        "Automotive & EV",
+        "Heavy Equipment & Metal Fabrication",
+        "Electronics & Semiconductor Manufacturing",
+        "Medical",
+        "Hospitals & Surgical Centers",
+        "Specialty Clinics",
+        "Medical Device Manufacturers",
+        "Aerospace",
+        "Commercial Aircraft",
+        "Space Launch & Satellite",
+        "Propulsion & Testing",
+        "Energy",
+        "Nuclear Fusion Programs",
+        "Oil & Gas Inspection & Processing",
+        "Research Institutions",
+        "Others (Telecom & Photonics, etc.)"
+      ],
+      "parent": {
+        "Defense & Government": null,
+        "Armed Forces": "Defense & Government",
+        "Homeland Security & Border Defense": "Defense & Government",
+        "Defense Labs & R&D": "Defense & Government",
+        "Defense Contractors & Integrators": "Defense & Government",
+        "Industrial Manufacturing": null,
+        "Automotive & EV": "Industrial Manufacturing",
+        "Heavy Equipment & Metal Fabrication": "Industrial Manufacturing",
+        "Electronics & Semiconductor Manufacturing": "Industrial Manufacturing",
+        "Medical": null,
+        "Hospitals & Surgical Centers": "Medical",
+        "Specialty Clinics": "Medical",
+        "Medical Device Manufacturers": "Medical",
+        "Aerospace": null,
+        "Commercial Aircraft": "Aerospace",
+        "Space Launch & Satellite": "Aerospace",
+        "Propulsion & Testing": "Aerospace",
+        "Energy": null,
+        "Nuclear Fusion Programs": "Energy",
+        "Oil & Gas Inspection & Processing": "Energy",
+        "Research Institutions": null,
+        "Others (Telecom & Photonics, etc.)": null
+      }
+    }
+  ],
+  "geographies": [
+    "U.S.",
+    "Canada",
+    "U.K.",
+    "Germany",
+    "Italy",
+    "France",
+    "Spain",
+    "Russia",
+    "Rest of Europe",
+    "China",
+    "India",
+    "Japan",
+    "South Korea",
+    "ASEAN",
+    "Australia",
+    "Rest of Asia Pacific",
+    "Brazil",
+    "Argentina",
+    "Mexico",
+    "Rest of Latin America",
+    "GCC",
+    "Israel",
+    "Rest of Middle East",
+    "South Africa",
+    "North Africa",
+    "Central Africa"
+  ],
+  "priced_dimension": "By Laser Type",
+  "geography_tree": {
+    "name": "Global",
+    "children": [
+      {
+        "name": "Asia Pacific",
+        "children": [
+          {
+            "name": "China",
+            "children": []
+          },
+          {
+            "name": "Japan",
+            "children": []
+          },
+          {
+            "name": "South Korea",
+            "children": []
+          },
+          {
+            "name": "India",
+            "children": []
+          },
+          {
+            "name": "ASEAN",
+            "children": []
+          },
+          {
+            "name": "Australia",
+            "children": []
+          },
+          {
+            "name": "Rest of Asia Pacific",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Africa",
+        "children": [
+          {
+            "name": "South Africa",
+            "children": []
+          },
+          {
+            "name": "North Africa",
+            "children": []
+          },
+          {
+            "name": "Central Africa",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Europe",
+        "children": [
+          {
+            "name": "Germany",
+            "children": []
+          },
+          {
+            "name": "U.K.",
+            "children": []
+          },
+          {
+            "name": "France",
+            "children": []
+          },
+          {
+            "name": "Italy",
+            "children": []
+          },
+          {
+            "name": "Spain",
+            "children": []
+          },
+          {
+            "name": "Russia",
+            "children": []
+          },
+          {
+            "name": "Rest of Europe",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "North America",
+        "children": [
+          {
+            "name": "U.S.",
+            "children": []
+          },
+          {
+            "name": "Canada",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Middle East",
+        "children": [
+          {
+            "name": "GCC",
+            "children": []
+          },
+          {
+            "name": "Israel",
+            "children": []
+          },
+          {
+            "name": "Rest of Middle East",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Latin America",
+        "children": [
+          {
+            "name": "Brazil",
+            "children": []
+          },
+          {
+            "name": "Mexico",
+            "children": []
+          },
+          {
+            "name": "Argentina",
+            "children": []
+          },
+          {
+            "name": "Rest of Latin America",
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

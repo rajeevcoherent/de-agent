@@ -1,17 +1,19 @@
 """Immutable taxonomy of the market-estimation model.
 
-This module is the single source of truth for *structure*: which years exist,
-which segmentation dimensions and segments exist, and how the geography tree is
-shaped. Everything downstream (readers, assembler, writer, diff) imports these
-definitions instead of hard-coding strings or row numbers, so the layout is
-described once and reused.
+Generic infrastructure types (years, bands, dimension/geography structures)
+live here. Market-specific segments and geographies are loaded at runtime from
+JSON schemas via ``runtime_taxonomy.load_runtime_taxonomy``.
+
+For backward compatibility, module-level ``GEOGRAPHIES``, ``PRICED_DIMENSION``,
+and ``SEGMENTATION_DIMENSIONS`` are populated from ``schemas/olive_oil.json``.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
 from functools import cached_property
-from typing import Mapping, Sequence
+from pathlib import Path
+from typing import Mapping
 
 # --- Time horizon -----------------------------------------------------------
 BASE_YEAR = 2025          # the anchor year (Value here == the global anchor)
@@ -30,13 +32,7 @@ class Band(str, Enum):
 
 @dataclass(frozen=True, slots=True)
 class Dimension:
-    """A segmentation dimension (e.g. 'By Product Type') and its ordered members.
-
-    Most dimensions are flat: every segment's market share is relative to the
-    band total. Some (Distribution Channel) are hierarchical: a child's share is
-    relative to its immediate parent segment, not the band total. `parent` maps
-    a segment to that immediate parent (None == band total).
-    """
+    """A segmentation dimension (e.g. 'By Product Type') and its ordered members."""
 
     title: str
     segments: tuple[str, ...]
@@ -44,48 +40,6 @@ class Dimension:
 
     def parent_of(self, segment: str) -> str | None:
         return self.parent.get(segment)
-
-
-# Ordered exactly as they appear in the source workbook.
-PRODUCT_TYPE = Dimension(
-    "By Product Type",
-    ("Extra virgin Oil", "Virgin Oil", "Pure or Refined Oil", "Blends",
-     "Others (Oil Spray, etc.)"),
-)
-PACKAGING = Dimension(
-    "By Packaging",
-    ("Bottles", "Pouches", "Tins", "Others (Jars, etc.)"),
-)
-END_USER = Dimension(
-    "By End User",
-    ("Cosmetics & Personal Care", "Food & Beverages", "Pharmaceuticals",
-     "Others (Nutraceuticals, etc.)"),
-)
-DISTRIBUTION_CHANNEL = Dimension(
-    "By Distribution Channel",
-    ("B2B", "B2C", "Offline", "Supermarkets or Hypermarkets",
-     "Convenience Stores", "Others (Specialty Stores, etc.)", "Online",
-     "E commerce Platforms", "Company Owned Websites"),
-    parent={
-        # B2B / B2C split the band total.
-        "B2B": None, "B2C": None,
-        # Offline / Online are the channel mix *within B2C*.
-        "Offline": "B2C", "Online": "B2C",
-        # Offline outlets sum to Offline; online outlets sum to Online.
-        "Supermarkets or Hypermarkets": "Offline",
-        "Convenience Stores": "Offline",
-        "Others (Specialty Stores, etc.)": "Offline",
-        "E commerce Platforms": "Online",
-        "Company Owned Websites": "Online",
-    },
-)
-
-SEGMENTATION_DIMENSIONS: tuple[Dimension, ...] = (
-    PRODUCT_TYPE, PACKAGING, END_USER, DISTRIBUTION_CHANNEL,
-)
-
-# ASP and Volume are priced per *product*, so only the product dimension carries ASP.
-PRICED_DIMENSION = PRODUCT_TYPE
 
 
 @dataclass(frozen=True, slots=True)
@@ -104,30 +58,9 @@ def _g(name: str, *children: Geography) -> Geography:
     return Geography(name, tuple(children))
 
 
-# The full geography tree, mirroring the 37 sheets of the source workbook.
-GEOGRAPHY_TREE: Geography = _g(
-    "Global",
-    _g("North America", _g("U.S."), _g("Canada")),
-    _g("Europe", _g("U.K."), _g("Germany"), _g("Romania"), _g("Italy"),
-       _g("Poland"), _g("France"), _g("Finland"), _g("Spain"), _g("Belgium"),
-       _g("Russia"), _g("Rest of Europe")),
-    _g("Asia Pacific", _g("China"), _g("India"), _g("Japan"),
-       _g("South Korea"), _g("ASEAN"), _g("Australia"), _g("Philippines"),
-       _g("Rest of Asia Pacific")),
-    _g("Latin America", _g("Brazil"), _g("Argentina"), _g("Mexico"),
-       _g("Rest of Latin America")),
-    _g("Middle East", _g("GCC Countries"), _g("Rest of Middle East")),
-    _g("Africa", _g("North Africa"), _g("South Africa"), _g("Central Africa")),
-)
-
-
 @dataclass(frozen=True)
 class GeographyIndex:
-    """Flattened, queryable view of the geography tree.
-
-    Built once and passed around so traversals are dictionary lookups rather
-    than repeated tree walks. (No ``slots`` so ``cached_property`` can memoise.)
-    """
+    """Flattened, queryable view of the geography tree."""
 
     root: Geography
 
@@ -155,4 +88,23 @@ class GeographyIndex:
             yield from GeographyIndex._walk(child)
 
 
-GEOGRAPHIES = GeographyIndex(GEOGRAPHY_TREE)
+def _build_geo_node(node) -> Geography:
+    return _g(node.name, *(_build_geo_node(c) for c in node.children))
+
+
+def _load_legacy_defaults():
+    """Load olive-oil schema for backward-compatible module-level exports."""
+    from .schema_loader import load_schema
+
+    schema_path = Path(__file__).resolve().parents[3] / "schemas" / "olive_oil.json"
+    schema = load_schema(schema_path)
+    dimensions = tuple(
+        Dimension(d.title, d.segments, parent=d.parent) for d in schema.dimensions
+    )
+    priced = next(d for d in dimensions if d.title == schema.priced_dimension)
+    root = (_build_geo_node(schema.geography_tree) if schema.geography_tree
+            else _g("Global"))
+    return GeographyIndex(root), dimensions, priced
+
+
+GEOGRAPHIES, SEGMENTATION_DIMENSIONS, PRICED_DIMENSION = _load_legacy_defaults()

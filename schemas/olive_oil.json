@@ -1,0 +1,156 @@
+{
+  "market_name": "Global Avocado Oil Market",
+  "dimensions": [
+    {
+      "title": "By Product Type",
+      "segments": [
+        "Extra virgin Oil",
+        "Virgin Oil",
+        "Pure or Refined Oil",
+        "Blends",
+        "Others (Oil Spray, etc.)"
+      ]
+    },
+    {
+      "title": "By Packaging",
+      "segments": [
+        "Bottles",
+        "Pouches",
+        "Tins",
+        "Others (Jars, etc.)"
+      ]
+    },
+    {
+      "title": "By End User",
+      "segments": [
+        "Cosmetics & Personal Care",
+        "Food & Beverages",
+        "Pharmaceuticals",
+        "Others (Nutraceuticals, etc.)"
+      ]
+    },
+    {
+      "title": "By Distribution Channel",
+      "segments": [
+        "B2B",
+        "B2C",
+        "Offline",
+        "Supermarkets or Hypermarkets",
+        "Convenience Stores",
+        "Others (Specialty Stores, etc.)",
+        "Online",
+        "E commerce Platforms",
+        "Company Owned Websites"
+      ],
+      "parent": {
+        "B2B": null,
+        "B2C": null,
+        "Offline": "B2C",
+        "Online": "B2C",
+        "Supermarkets or Hypermarkets": "Offline",
+        "Convenience Stores": "Offline",
+        "Others (Specialty Stores, etc.)": "Offline",
+        "E commerce Platforms": "Online",
+        "Company Owned Websites": "Online"
+      }
+    }
+  ],
+  "geographies": [
+    "U.S.",
+    "Canada",
+    "U.K.",
+    "Germany",
+    "Romania",
+    "Italy",
+    "Poland",
+    "France",
+    "Finland",
+    "Spain",
+    "Belgium",
+    "Russia",
+    "Rest of Europe",
+    "China",
+    "India",
+    "Japan",
+    "South Korea",
+    "ASEAN",
+    "Australia",
+    "Philippines",
+    "Rest of Asia Pacific",
+    "Brazil",
+    "Argentina",
+    "Mexico",
+    "Rest of Latin America",
+    "GCC Countries",
+    "Rest of Middle East",
+    "North Africa",
+    "South Africa",
+    "Central Africa"
+  ],
+  "priced_dimension": "By Product Type",
+  "geography_tree": {
+    "name": "Global",
+    "children": [
+      {
+        "name": "North America",
+        "children": [
+          {"name": "U.S."},
+          {"name": "Canada"}
+        ]
+      },
+      {
+        "name": "Europe",
+        "children": [
+          {"name": "U.K."},
+          {"name": "Germany"},
+          {"name": "Romania"},
+          {"name": "Italy"},
+          {"name": "Poland"},
+          {"name": "France"},
+          {"name": "Finland"},
+          {"name": "Spain"},
+          {"name": "Belgium"},
+          {"name": "Russia"},
+          {"name": "Rest of Europe"}
+        ]
+      },
+      {
+        "name": "Asia Pacific",
+        "children": [
+          {"name": "China"},
+          {"name": "India"},
+          {"name": "Japan"},
+          {"name": "South Korea"},
+          {"name": "ASEAN"},
+          {"name": "Australia"},
+          {"name": "Philippines"},
+          {"name": "Rest of Asia Pacific"}
+        ]
+      },
+      {
+        "name": "Latin America",
+        "children": [
+          {"name": "Brazil"},
+          {"name": "Argentina"},
+          {"name": "Mexico"},
+          {"name": "Rest of Latin America"}
+        ]
+      },
+      {
+        "name": "Middle East",
+        "children": [
+          {"name": "GCC Countries"},
+          {"name": "Rest of Middle East"}
+        ]
+      },
+      {
+        "name": "Africa",
+        "children": [
+          {"name": "North Africa"},
+          {"name": "South Africa"},
+          {"name": "Central Africa"}
+        ]
+      }
+    ]
+  }
+}

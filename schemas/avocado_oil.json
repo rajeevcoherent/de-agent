@@ -1,0 +1,263 @@
+{
+  "market_name": "Avocado Oil Market",
+  "dimensions": [
+    {
+      "title": "By Product Type",
+      "segments": [
+        "Extra virgin Oil",
+        "Virgin Oil",
+        "Pure or Refined Oil",
+        "Blends",
+        "Others (Oil Spray, etc.)"
+      ],
+      "parent": {
+        "Extra virgin Oil": null,
+        "Virgin Oil": null,
+        "Pure or Refined Oil": null,
+        "Blends": null,
+        "Others (Oil Spray, etc.)": null
+      }
+    },
+    {
+      "title": "By Packaging",
+      "segments": [
+        "Bottles",
+        "Pouches",
+        "Tins",
+        "Others (Jars, etc.)"
+      ],
+      "parent": {
+        "Bottles": null,
+        "Pouches": null,
+        "Tins": null,
+        "Others (Jars, etc.)": null
+      }
+    },
+    {
+      "title": "By End User",
+      "segments": [
+        "Cosmetics & Personal Care",
+        "Food & Beverages",
+        "Pharmaceuticals",
+        "Others (Nutraceuticals, etc.)"
+      ],
+      "parent": {
+        "Cosmetics & Personal Care": null,
+        "Food & Beverages": null,
+        "Pharmaceuticals": null,
+        "Others (Nutraceuticals, etc.)": null
+      }
+    },
+    {
+      "title": "By Distribution Channel",
+      "segments": [
+        "B2B",
+        "B2C",
+        "Offline",
+        "Supermarkets or Hypermarkets",
+        "Convenience Stores",
+        "Others (Specialty Stores, etc.)",
+        "Online",
+        "E commerce Platforms",
+        "Company Owned Websites"
+      ],
+      "parent": {
+        "B2B": null,
+        "B2C": null,
+        "Offline": null,
+        "Supermarkets or Hypermarkets": "Offline",
+        "Convenience Stores": "Offline",
+        "Others (Specialty Stores, etc.)": "Offline",
+        "Online": null,
+        "E commerce Platforms": "Online",
+        "Company Owned Websites": "Online"
+      }
+    }
+  ],
+  "geographies": [
+    "U.S.",
+    "Canada",
+    "U.K.",
+    "Germany",
+    "Romania",
+    "Italy",
+    "Poland",
+    "France",
+    "Finland",
+    "Spain",
+    "Belgium",
+    "Russia",
+    "Rest of Europe",
+    "China",
+    "India",
+    "Japan",
+    "South Korea",
+    "ASEAN",
+    "Australia",
+    "Philippines",
+    "Rest of Asia Pacific",
+    "Brazil",
+    "Argentina",
+    "Mexico",
+    "Rest of Latin America",
+    "GCC Countries",
+    "Rest of Middle East",
+    "North Africa"
+  ],
+  "priced_dimension": "By Product Type",
+  "geography_tree": {
+    "name": "Global",
+    "children": [
+      {
+        "name": "Europe",
+        "children": [
+          {
+            "name": "U.K.",
+            "children": []
+          },
+          {
+            "name": "Germany",
+            "children": []
+          },
+          {
+            "name": "Romania",
+            "children": []
+          },
+          {
+            "name": "Italy",
+            "children": []
+          },
+          {
+            "name": "Poland",
+            "children": []
+          },
+          {
+            "name": "France",
+            "children": []
+          },
+          {
+            "name": "Finland",
+            "children": []
+          },
+          {
+            "name": "Spain",
+            "children": []
+          },
+          {
+            "name": "Belgium",
+            "children": []
+          },
+          {
+            "name": "Russia",
+            "children": []
+          },
+          {
+            "name": "Rest of Europe",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Latin America",
+        "children": [
+          {
+            "name": "Brazil",
+            "children": []
+          },
+          {
+            "name": "Argentina",
+            "children": []
+          },
+          {
+            "name": "Mexico",
+            "children": []
+          },
+          {
+            "name": "Rest of Latin America",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "North America",
+        "children": [
+          {
+            "name": "U.S.",
+            "children": []
+          },
+          {
+            "name": "Canada",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Middle East",
+        "children": [
+          {
+            "name": "GCC Countries",
+            "children": []
+          },
+          {
+            "name": "Rest of Middle East",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Africa",
+        "children": [
+          {
+            "name": "North Africa",
+            "children": []
+          },
+          {
+            "name": "South Africa",
+            "children": []
+          },
+          {
+            "name": "Central Africa",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Asia Pacific",
+        "children": [
+          {
+            "name": "China",
+            "children": []
+          },
+          {
+            "name": "India",
+            "children": []
+          },
+          {
+            "name": "Japan",
+            "children": []
+          },
+          {
+            "name": "South Korea",
+            "children": []
+          },
+          {
+            "name": "ASEAN",
+            "children": []
+          },
+          {
+            "name": "Australia",
+            "children": []
+          },
+          {
+            "name": "Philippines",
+            "children": []
+          },
+          {
+            "name": "Rest of Asia Pacific",
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -34,13 +34,28 @@ class LLMClient:
         self._config = config
         self._cache = cache if cache is not None else JsonCache()
 
+
     def complete_json(self, system: str, user: str) -> dict:
+      
         if not self._config.is_online:
             raise LLMError("no API key configured; cannot call the model")
+
         cache_key = JsonCache.key(self._config.model, system, user)
-        cached = self._cache.get(cache_key)
-        if cached is not None:
-            return cached
+
+        # ==========================================================
+        # DEBUG MODE: FORCE DISABLE CACHE
+        # ==========================================================
+        cached = None
+
+        # print("[DEBUG] cached is None =", cached is None)
+
+        # if cached is not None:
+            # print("[LLM] CACHE HIT")
+            # return cached
+
+        # print(f"[LLM] API CALL -> {self._config.base_url}")
+        # print(f"[LLM] MODEL    -> {self._config.model}")
+
         payload = {
             "model": self._config.model,
             "messages": [
@@ -50,19 +65,85 @@ class LLMClient:
             "response_format": {"type": "json_object"},
             "temperature": 0.2,
         }
-        headers = {"Authorization": f"Bearer {self._config.auth_token}"}
+
+        headers = {
+            "Authorization": f"Bearer {self._config.auth_token}"
+        }
+
         with httpx.Client(timeout=self._config.request_timeout) as client:
-            resp = client.post(f"{self._config.base_url}/chat/completions",
-                               json=payload, headers=headers)
+            resp = client.post(
+                f"{self._config.base_url}/chat/completions",
+                json=payload,
+                headers=headers,
+            )
+
+        # print("[LLM] STATUS   ->", resp.status_code)
+
         if resp.status_code >= 400:
-            raise LLMError(f"LLM HTTP {resp.status_code}: {resp.text[:300]}")
+            raise LLMError(
+                f"LLM HTTP {resp.status_code}: {resp.text[:300]}"
+            )
+
         content = resp.json()["choices"][0]["message"]["content"]
+
         try:
             parsed = json.loads(content)
         except json.JSONDecodeError as exc:
-            raise LLMError(f"model did not return valid JSON: {exc}") from exc
-        self._cache.put(cache_key, parsed)
+            raise LLMError(
+                f"model did not return valid JSON: {exc}"
+            ) from exc
+
+        # ==========================================================
+        # DEBUG MODE: DO NOT WRITE CACHE
+        # ==========================================================
+        # self._cache.put(cache_key, parsed)
+
         return parsed
+
+    # def complete_json(self, system: str, user: str) -> dict:
+    #     if not self._config.is_online:
+    #         raise LLMError("no API key configured; cannot call the model")
+
+    #     cache_key = JsonCache.key(self._config.model, system, user)
+    #     cached = self._cache.get(cache_key)
+
+    #     # DEBUG 1: Cache check
+    #     if cached is not None:
+    #         print("[LLM] CACHE HIT")
+    #         return cached
+
+    #     # DEBUG 2: API call info
+    #     print(f"[LLM] API CALL -> {self._config.base_url}")
+    #     print(f"[LLM] MODEL    -> {self._config.model}")
+
+    #     payload = {
+    #         "model": self._config.model,
+    #         "messages": [
+    #             {"role": "system", "content": system},
+    #             {"role": "user", "content": user},
+    #         ],
+    #         "response_format": {"type": "json_object"},
+    #         "temperature": 0.2,
+    #     }
+
+    #     headers = {
+    #         "Authorization": f"Bearer {self._config.auth_token}"
+    #     }
+
+    #     with httpx.Client(timeout=self._config.request_timeout) as client:
+    #         resp = client.post(
+    #             f"{self._config.base_url}/chat/completions",
+    #             json=payload,
+    #             headers=headers
+    #         )
+
+    #     # DEBUG 3: Response status
+    #     print("[LLM] STATUS   ->", resp.status_code)
+
+    #     if resp.status_code >= 400:
+    #         raise LLMError(f"LLM HTTP {resp.status_code}: {resp.text[:300]}")
+
+    #     content = resp.json()["choices"][0]["message"]["content"]
 
 
 class EvidenceGatherer:
@@ -102,3 +183,4 @@ class EvidenceGatherer:
                 return DDGS
             except ImportError:
                 return None
+    

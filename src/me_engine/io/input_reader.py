@@ -12,7 +12,8 @@ from pathlib import Path
 from openpyxl import load_workbook
 
 from ..curve.agent import MarketContext
-from ..domain.taxonomy import GEOGRAPHIES
+from ..domain.runtime_taxonomy import RuntimeTaxonomy, default_taxonomy
+from .workbook_inspector import find_data_sheet_name
 
 _NAME_COL, _CAGR_COL, _VALUE_COL = 2, 4, 5      # cols B, D, E
 _MARKET_NAME_CELL = (1, 3)                      # C1
@@ -29,11 +30,24 @@ class GeoInput:
 class InputSheetReader:
     """Extracts geography CAGR/value/region rows from the Input Sheet."""
 
-    def __init__(self, path: Path | str, sheet: str = "Data") -> None:
-        self._ws = load_workbook(Path(path), data_only=True)[sheet]
+    def __init__(self, path: Path | str, sheet: str | None = None,
+                 taxonomy: RuntimeTaxonomy | None = None) -> None:
+        self._taxonomy = taxonomy or default_taxonomy()
+        wb = load_workbook(Path(path), data_only=True)
+        sheet_name = sheet or find_data_sheet_name(wb)
+        if sheet_name is None:
+            raise ValueError(
+                "Input workbook is missing a Data sheet; expected Data/Input/InputSheet")
+        self._ws = wb[sheet_name]
+        raw_market_name = self._ws.cell(*_MARKET_NAME_CELL).value
+        self._market_name = (
+            str(raw_market_name).strip()
+            if isinstance(raw_market_name, str) and raw_market_name.strip()
+            else Path(path).stem
+        )
 
     def market_name(self) -> str:
-        return str(self._ws.cell(*_MARKET_NAME_CELL).value)
+        return self._market_name
 
     def read(self) -> dict[str, GeoInput]:
         """Geography rows from the sizing block, keyed by name.
@@ -43,8 +57,8 @@ class InputSheetReader:
         also carry numbers. The sizing block lists each geography with its CAGR
         and 2025 value; the last occurrence wins (dedupes the two sub-blocks).
         """
-        valid_names = set(GEOGRAPHIES.by_name)
-        parent_of = GEOGRAPHIES.parent_of
+        valid_names = set(self._taxonomy.geographies.by_name)
+        parent_of = self._taxonomy.geographies.parent_of
         found: dict[str, GeoInput] = {}
         for row in range(1, self._ws.max_row + 1):
             name = self._ws.cell(row, _NAME_COL).value

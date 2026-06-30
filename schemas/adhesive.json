@@ -1,0 +1,41 @@
+{
+  "market_name": "Adhesive & Bonding Market",
+
+  "product_type": [
+    "Acrylic Adhesives",
+    "Epoxy Adhesives",
+    "Polyurethane Adhesives",
+    "Silicone Adhesives",
+    "Cyanoacrylate Adhesives",
+    "Ethylene Vinyl Acetate Adhesives"
+  ],
+
+  "geographies": [
+    "U.S.",
+    "Canada",
+    "Germany",
+    "U.K.",
+    "France",
+    "Italy",
+    "Spain",
+    "Russia",
+    "Rest of Europe",
+    "China",
+    "India",
+    "Japan",
+    "South Korea",
+    "ASEAN",
+    "Australia",
+    "Rest of Asia Pacific",
+    "Brazil",
+    "Mexico",
+    "Argentina",
+    "Rest of Latin America",
+    "Israel",
+    "GCC",
+    "Rest of Middle East",
+    "North Africa",
+    "Central Africa",
+    "South Africa"
+  ]
+}

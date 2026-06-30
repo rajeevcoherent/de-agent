@@ -12,7 +12,13 @@ from typing import Sequence
 
 from openpyxl import load_workbook
 
-from ..domain.taxonomy import GEOGRAPHIES, SEGMENTATION_DIMENSIONS, PRICED_DIMENSION
+from ..domain.runtime_taxonomy import RuntimeTaxonomy, default_taxonomy
+from ..io.workbook_inspector import (
+    find_data_sheet_name,
+    find_asp_sheet_name,
+    find_label_column,
+    scan_asp_geo_columns,
+)
 
 
 # Tolerance for shares summing to 1.0 within a dimension.
@@ -52,6 +58,9 @@ class Gate1Report:
 class InputValidator:
     """Validates the Input Sheet before passing it to the agent fleet."""
 
+    def __init__(self, taxonomy: RuntimeTaxonomy | None = None) -> None:
+        self._taxonomy = taxonomy or default_taxonomy()
+
     def validate(self, input_path: Path | str) -> Gate1Report:
         path = Path(input_path)
         report = Gate1Report()
@@ -62,15 +71,21 @@ class InputValidator:
             report.failures.append(ValidationFailure("file-open", str(e)))
             return report
 
-        if "Data" not in wb_data.sheetnames:
+        data_sheet = find_data_sheet_name(wb_data)
+        asp_sheet = find_asp_sheet_name(wb_data, exclude_sheet=data_sheet)
+        if data_sheet is None:
             report.failures.append(ValidationFailure("sheet-exists", "'Data' sheet missing"))
             return report
-        if "ASP" not in wb_data.sheetnames:
+        if asp_sheet is None:
             report.failures.append(ValidationFailure("sheet-exists", "'ASP' sheet missing"))
             return report
+        if data_sheet != "Data":
+            report.warnings.append(f"Using '{data_sheet}' as the Data sheet")
+        if asp_sheet != "ASP":
+            report.warnings.append(f"Using '{asp_sheet}' as the ASP sheet")
 
-        ws_data = wb_data["Data"]
-        ws_asp = wb_data["ASP"]
+        ws_data = wb_data[data_sheet]
+        ws_asp = wb_data[asp_sheet]
 
         self._check_market_name(ws_data, report)
         geo_data = self._check_geographies(ws_data, report)
@@ -84,12 +99,12 @@ class InputValidator:
     def _check_market_name(self, ws, report: Gate1Report) -> None:
         name = ws.cell(1, 3).value
         if not name or not str(name).strip():
-            report.failures.append(ValidationFailure(
-                "market-name", "Cell C1 (market name) is blank"))
+            report.warnings.append(
+                "Cell C1 (market name) is blank; using workbook filename as market name")
 
     def _check_geographies(self, ws, report: Gate1Report) -> dict:
         """Check every known geography has a positive CAGR and anchor value."""
-        valid_names = set(GEOGRAPHIES.by_name)
+        valid_names = set(self._taxonomy.geographies.by_name)
         found: dict[str, tuple[float, float]] = {}   # name -> (cagr, anchor)
 
         for row in range(1, ws.max_row + 1):
@@ -133,15 +148,15 @@ class InputValidator:
             return
 
         # Only check flat dimensions (not hierarchical Distribution Channel)
-        flat_dims = [d for d in SEGMENTATION_DIMENSIONS
+        flat_dims = [d for d in self._taxonomy.segmentation_dimensions
                      if not any(d.parent_of(s) for s in d.segments)]
 
         for dim in flat_dims:
             seg_rows: dict[str, int] = {}
             for row in range(1, ws.max_row + 1):
                 label = ws.cell(row, 2).value
-                if isinstance(label, str) and label in dim.segments:
-                    seg_rows[label] = row
+                if isinstance(label, str) and label.strip() in dim.segments:
+                    seg_rows[label.strip()] = row
 
             if len(seg_rows) != len(dim.segments):
                 report.warnings.append(
@@ -160,19 +175,45 @@ class InputValidator:
                         f"'{dim.title}' shares for {geo} sum to {total:.4f} (expected ~1.0)"))
 
     def _check_asp(self, ws_asp, geo_data: dict, report: Gate1Report) -> None:
-        """Check each product has a positive ASP for at least one geography."""
-        for product in PRICED_DIMENSION.segments:
+        """Check each leaf product has a positive ASP for at least one geography.
+
+        Parent/rollup segments (those that have children in the priced dimension)
+        are skipped — their ASP row is a sum row and may be 0 or missing.
+        """
+        priced = self._taxonomy.priced_dimension
+        # Only check leaf segments (those with no children)
+        has_children = {priced.parent_of(s) for s in priced.segments if priced.parent_of(s) is not None}
+        leaf_products = [p for p in priced.segments if p not in has_children]
+
+        label_col = find_label_column(ws_asp)
+        for product in leaf_products:
             found_row = None
             for r in range(1, ws_asp.max_row + 1):
-                if ws_asp.cell(r, 2).value == product:
+                cell_val = ws_asp.cell(r, label_col).value
+                if isinstance(cell_val, str) and cell_val.strip() == product:
                     found_row = r
                     break
+            if found_row is None:
+                # Fallback: search the first few columns if the label column was misdetected
+                for r in range(1, ws_asp.max_row + 1):
+                    for c in (2, 3, 4):
+                        cell_val = ws_asp.cell(r, c).value
+                        if isinstance(cell_val, str) and cell_val.strip() == product:
+                            found_row = r
+                            break
+                    if found_row is not None:
+                        break
             if found_row is None:
                 report.failures.append(ValidationFailure(
                     "asp-row", f"Product '{product}' not found in ASP sheet"))
                 continue
-            # Check a sample of values in that row
-            sample = [ws_asp.cell(found_row, c).value for c in range(3, 8)]
+            # Check a sample of values in that row from the ASP block.
+            asp_cols = scan_asp_geo_columns(ws_asp)
+            if asp_cols:
+                sample_cols = sorted(asp_cols.values())[:5]
+            else:
+                sample_cols = list(range(3, 8))
+            sample = [ws_asp.cell(found_row, c).value for c in sample_cols]
             numeric = [v for v in sample if isinstance(v, (int, float))]
             if not numeric:
                 report.failures.append(ValidationFailure(

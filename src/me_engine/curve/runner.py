@@ -9,6 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+from ..domain.runtime_taxonomy import RuntimeTaxonomy, default_taxonomy
 from ..domain.series import Series
 from ..domain.taxonomy import YEARS
 from ..io.input_reader import GeoInput, InputSheetReader
@@ -41,8 +42,9 @@ class CurveRunner:
         self._scorer = CurveScorer()
 
     def run(self, input_path: Path | str,
-            truth_paths: dict[str, Series] | None = None) -> list[CurveOutcome]:
-        reader = InputSheetReader(input_path)
+            truth_paths: dict[str, Series] | None = None,
+            taxonomy: RuntimeTaxonomy | None = None) -> list[CurveOutcome]:
+        reader = InputSheetReader(input_path, taxonomy=taxonomy)
         inputs = reader.read()
         return [self._one(geo, truth_paths) for geo in inputs.values()]
 

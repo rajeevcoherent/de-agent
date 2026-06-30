@@ -18,7 +18,15 @@ output/
 
 # Generated output workbooks only
 output/*.xlsx
+my_outputs/
 
-# OS
+# Local environment files
+.env
+.env.*
+.venv/
+venv/
+
+# Editor and OS
+.vscode/
 Thumbs.db
 .DS_Store
