@@ -41,7 +41,7 @@ def value_errors(result, me) -> list[float]:
 
 
 def main() -> None:
-    print("Running agent fleet (curve + segmentation + ASP)...")
+    print("Running agent fleet (curve + segmentation + ASP + generation)...")
     drivers = InputDriverBuilder(INPUT, truth_me=TRUTH,
                                  use_segmentation_agent=True).build()
     result = Assembler().assemble(drivers)

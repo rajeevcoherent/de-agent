@@ -12,12 +12,6 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-# rajeev 3 lines from here
-print("OPENROUTER_API_KEY exists:", bool(os.getenv("OPENROUTER_API_KEY")))
-print("ME_CURVE_MODEL:", os.getenv("ME_CURVE_MODEL"))
-print("ME_LLM_BASE_URL:", os.getenv("ME_LLM_BASE_URL"))
-
-
 def _load_dotenv(path: Path) -> None:
     """Minimal .env loader (no dependency); ignores comments and blanks."""
     if not path.exists():

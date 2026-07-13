@@ -35,6 +35,12 @@ LLM proposal cannot drop the result below the prior.
 - **Prior:** data-derived **0.85%/yr** (ASP is near-uniform across products/geos).
 - **Math:** compound from the base-year price to a full ASP path; volume = value/asp.
 
+### 4. Generation Agent  (`generation_agent.py`)
+- **Decides:** the market-specific blueprint for an Input Sheet from local schema/template evidence.
+- **Input:** a market description or market name.
+- **Output:** a structured plan with schema hint, output workbook name/path, and default CAGR/anchor values.
+- **Materialization:** can create a workbook in the agent-generated folder and hand it off to the existing pipeline.
+
 ## Infrastructure
 - **LLM client** (`llm.py`): OpenAI-compatible JSON calls, provider-agnostic.
 - **Cache** (`cache.py`): SQLite content-addressed cache — re-runs are free.

@@ -10,7 +10,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from .schema_loader import GeographyNodeSchema, MarketSchema, load_schema
+from .schema_loader import GeographyNodeSchema, MarketSchema, load_schema, DimensionSchema
+from ..io.workbook_inspector import WorkbookInspector
+import logging
 from .taxonomy import Dimension, Geography, GeographyIndex, _g
 
 
@@ -83,12 +85,37 @@ def build_taxonomy_from_workbook(input_path: Path | str) -> RuntimeTaxonomy:
     """Inspect an Input Sheet workbook and return a RuntimeTaxonomy in memory.
 
     This is the primary pipeline entry point.  No JSON file is written or read.
-    The WorkbookInspector extraction logic is reused via extract_schema_in_memory()
-    which calls the same routines but returns a MarketSchema object directly.
+    The extractor may raise on malformed or unexpected workbooks. To avoid
+    crashing the pipeline we first try the strict extractor and fall back to
+    a lenient in-memory inspection that builds a best-effort MarketSchema.
     """
-    from me_engine.tools.extract_schema import extract_schema
-    schema = extract_schema(input_path)
-    return build_runtime_taxonomy(schema)
+    try:
+        from me_engine.tools.extract_schema import extract_schema
+        schema = extract_schema(input_path)
+        return build_runtime_taxonomy(schema)
+    except Exception as exc:  # lenient fallback
+        logging.warning("Strict schema extraction failed: %s. Falling back to WorkbookInspector.", exc)
+        insp = WorkbookInspector()
+        meta = insp.inspect(input_path)
+
+        # Build DimensionSchema list (no parent info available in lenient path)
+        dims = tuple(DimensionSchema(title=d.title, segments=tuple(d.segments))
+                     for d in meta.dimensions)
+
+        # Prefer column headers as geographies; fall back to sizing block names
+        geos = tuple(meta.column_headers) if meta.column_headers else tuple(g.name for g in meta.geographies)
+
+        priced = meta.detected_priced_dimension or (dims[0].title if dims else "")
+
+        schema = MarketSchema(
+            market_name=meta.market_name or Path(input_path).stem,
+            dimensions=dims,
+            geographies=geos,
+            priced_dimension=priced,
+            geography_tree=None,
+        )
+
+        return build_runtime_taxonomy(schema)
 
 
 def default_taxonomy() -> RuntimeTaxonomy:

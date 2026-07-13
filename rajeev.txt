@@ -1,0 +1,30 @@
+Mean Relative error can misleads in these situations :
+- Some actual values are very small
+- There are few large outliers
+- sometimes cells may not be comparable
+         
+Solution : 
+- MAE and RMSE : it tells absolute size of the error
+- median absolute percentage error(sMAPE)
+- R square
+- bias : check model is systemically over or under fitting
+
+Good to go : 
+MRE < 5% or sMAPE < 5%
+RMSE and MAE are reasonable
+R² > 0.95
+bias is near zero
+
+
+then yes, that is a strong sign. 
+
+
+
+- Agent will take input like summary and universal json and that universal json will be of thise markets on which this entire model gets tested or anyhow any input sheet is generated
+- one agent will query the internet and will return the json which will contain the numbers of the market and also it will return the artifacts like why these numbers are There
+let's suppose "i'have asked" to generate input sheet of the crude oil market and then it will query the internet
+and will generate their numbers like region or something and will also consider current events like 
+us-iran wars and will give artifacts like why this much number of jump in the price ratio market and kind of simply means if there is certain issues then it can justified that numbers that's it.
+- and there might be a brain agent which will ask question like "why there is so much jump into the crude oil prices?" 
+then other one will answer there is us-iran war that's why? and will generate the artifacts and will justify the price hike
+
