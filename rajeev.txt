@@ -28,3 +28,4 @@ us-iran wars and will give artifacts like why this much number of jump in the pr
 - and there might be a brain agent which will ask question like "why there is so much jump into the crude oil prices?" 
 then other one will answer there is us-iran war that's why? and will generate the artifacts and will justify the price hike
 
+random_text
